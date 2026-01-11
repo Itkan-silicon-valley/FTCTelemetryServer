@@ -1,4 +1,4 @@
-# ftc telemetry server
+# FTC Telemetry Server
 
 Schema-driven telemetry server for FTC robots (Java + JSON).
 
@@ -11,7 +11,7 @@ Schema-driven telemetry server for FTC robots (Java + JSON).
 - Real-time streaming of Limelight camera and metrics
 - Access to Limelight webserver configuration via tunneling
 - Access to Basic robot vitals like control hub voltage and current (total power)
-- Developer details, see [Dev README](./telelib/README.md)
+- Developer details, see [Dev README](./TeamCode/src/main/java/org/firstinspires/ftc/teamcode/telelib/README.md)
 
 ---
 
