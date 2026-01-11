@@ -1,0 +1,413 @@
+{
+  "port": 5599,
+  "strict": true,
+  "graphs": [
+    {
+      "id": "drive",
+      "title": "Drive Power",
+      "series": [
+        "front_left_power",
+        "front_right_power",
+        "back_left_power",
+        "back_right_power"
+      ]
+    },
+    {
+      "id": "intake-transfer",
+      "title": "Intake/Transfer",
+      "series": [
+        "intake_power",
+        "transfer_power"
+      ]
+    },
+    {
+      "id": "shooter-velocity",
+      "title": "Shooter Velocity",
+      "series": [
+        "shooter1_velocity",
+        "shooter2_velocity"
+      ]
+    },
+    {
+      "id": "shooter-power",
+      "title": "Shooter Power",
+      "series": [
+        "shooter1_power",
+        "shooter2_power"
+      ]
+    },
+    {
+      "id": "servos",
+      "title": "Servo Positions",
+      "series": [
+        "turret_position",
+        "hold_position",
+        "arm_position"
+      ]
+    },
+    {
+      "id": "imu",
+      "title": "IMU (deg)",
+      "series": [
+        "imu_yaw_deg",
+        "imu_pitch_deg",
+        "imu_roll_deg"
+      ]
+    },
+    {
+      "id": "pinpoint-imu",
+      "title": "Pinpoint IMU (deg)",
+      "series": [
+        "pinpoint_yaw_deg",
+        "pinpoint_pitch_deg",
+        "pinpoint_roll_deg"
+      ]
+    },
+    {
+      "id": "power",
+      "title": "Power",
+      "series": [
+        "battery_voltage",
+        "hub_current_amps",
+        "hub_input_volts"
+      ]
+    },
+    {
+      "id": "pinpoint",
+      "title": "Pinpoint Pose (mm/deg)",
+      "series": [
+        "pinpoint_x_mm",
+        "pinpoint_y_mm",
+        "pinpoint_heading_deg"
+      ]
+    },
+    {
+      "id": "limelight",
+      "title": "Limelight Target",
+      "series": [
+        "ll_tx",
+        "ll_ty",
+        "ll_ta"
+      ]
+    },
+    {
+      "id": "limelight-status",
+      "title": "Limelight Status",
+      "series": [
+        "ll_valid",
+        "ll_fiducial_id",
+        "ll_status_temp",
+        "ll_status_cpu",
+        "ll_status_fps",
+        "ll_status_pipeline_index"
+      ]
+    },
+    {
+      "id": "distance-target",
+      "title": "Distance/Target Velocity",
+      "series": [
+        "distance_mm",
+        "target_velocity"
+      ]
+    },
+    {
+      "id": "flags",
+      "title": "Flags",
+      "series": [
+        "open_hold",
+        "shoot",
+        "field_centric",
+        "turret_lock",
+        "tag_found"
+      ]
+    },
+    {
+      "id": "live-config",
+      "title": "Live Config",
+      "series": [
+        "shooter_kp",
+        "turret_lock_gain"
+      ]
+    }
+  ],
+  "subscribe": [
+    "run_id",
+    "robot_ts_ms",
+    "front_left_power",
+    "front_right_power",
+    "back_left_power",
+    "back_right_power",
+    "intake_power",
+    "transfer_power",
+    "shooter1_power",
+    "shooter1_velocity",
+    "shooter2_power",
+    "shooter2_velocity",
+    "turret_position",
+    "hold_position",
+    "arm_position",
+    "imu_yaw_deg",
+    "imu_pitch_deg",
+    "imu_roll_deg",
+    "pinpoint_yaw_deg",
+    "pinpoint_pitch_deg",
+    "pinpoint_roll_deg",
+    "battery_voltage",
+    "hub_current_amps",
+    "hub_input_volts",
+    "pinpoint_x_mm",
+    "pinpoint_y_mm",
+    "pinpoint_heading_deg",
+    "pinpoint_status",
+    "ll_valid",
+    "ll_tx",
+    "ll_ty",
+    "ll_ta",
+    "ll_fiducial_id",
+    "ll_status_temp",
+    "ll_status_cpu",
+    "ll_status_fps",
+    "ll_status_pipeline_index",
+    "distance_mm",
+    "target_velocity",
+    "open_hold",
+    "shoot",
+    "field_centric",
+    "turret_lock",
+    "tag_found",
+    "shooter_kp",
+    "turret_lock_gain"
+  ],
+  "fields": [
+    {
+      "name": "run_id",
+      "type": "long",
+      "unit": "s"
+    },
+    {
+      "name": "robot_ts_ms",
+      "type": "long",
+      "unit": "ms"
+    },
+    {
+      "name": "front_left_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "front_right_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "back_left_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "back_right_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "intake_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "transfer_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "shooter1_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "shooter1_velocity",
+      "type": "double",
+      "unit": "ticks/s"
+    },
+    {
+      "name": "shooter2_power",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "shooter2_velocity",
+      "type": "double",
+      "unit": "ticks/s"
+    },
+    {
+      "name": "turret_position",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "hold_position",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "arm_position",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "imu_yaw_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "imu_pitch_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "imu_roll_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "pinpoint_yaw_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "pinpoint_pitch_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "pinpoint_roll_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "battery_voltage",
+      "type": "double",
+      "unit": "V"
+    },
+    {
+      "name": "hub_current_amps",
+      "type": "double",
+      "unit": "A"
+    },
+    {
+      "name": "hub_input_volts",
+      "type": "double",
+      "unit": "V"
+    },
+    {
+      "name": "pinpoint_x_mm",
+      "type": "double",
+      "unit": "mm"
+    },
+    {
+      "name": "pinpoint_y_mm",
+      "type": "double",
+      "unit": "mm"
+    },
+    {
+      "name": "pinpoint_heading_deg",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "pinpoint_status",
+      "type": "string",
+      "unit": ""
+    },
+    {
+      "name": "ll_valid",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "ll_tx",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "ll_ty",
+      "type": "double",
+      "unit": "deg"
+    },
+    {
+      "name": "ll_ta",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "ll_fiducial_id",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "ll_status_temp",
+      "type": "double",
+      "unit": "C"
+    },
+    {
+      "name": "ll_status_cpu",
+      "type": "double",
+      "unit": "%"
+    },
+    {
+      "name": "ll_status_fps",
+      "type": "double",
+      "unit": "fps"
+    },
+    {
+      "name": "ll_status_pipeline_index",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "distance_mm",
+      "type": "double",
+      "unit": "mm"
+    },
+    {
+      "name": "target_velocity",
+      "type": "double",
+      "unit": "ticks/s"
+    },
+    {
+      "name": "open_hold",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "shoot",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "field_centric",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "turret_lock",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "tag_found",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "shooter_kp",
+      "type": "double",
+      "unit": ""
+    },
+    {
+      "name": "turret_lock_gain",
+      "type": "double",
+      "unit": ""
+    }
+  ]
+}
