@@ -11,13 +11,14 @@ Flow (robot -> laptop):
 
 1) `TelemetrySchema` loads a JSON schema from assets or file.
 2) `SchemaTelemetryService` builds a fixed field catalog from the schema.
-3) Each loop: `begin()` -> `put()` fields -> `publish()` a snapshot.
-4) `TelemetryServer` broadcasts snapshots to connected clients.
-5) The dashboard subscribes to the fields it needs via `SUB`.
+3) `SchemaTelemetryBus` wraps the service and provides a safe `TelemetryBus` API.
+4) Each loop: `begin()` -> `put()` fields -> `publish()` a snapshot.
+5) `TelemetryServer` broadcasts snapshots to connected clients.
+6) The dashboard subscribes to the fields it needs via `SUB`.
 
 Live config flow (laptop -> robot):
 
-1) Robot registers tunables in `ConfigRegistry`.
+1) Robot registers tunables in `ConfigRegistry` via `TelemetryConfigurable`.
 2) Dashboard requests them with `LISTCFG`.
 3) Dashboard updates values with `SET key=value`.
 
@@ -115,6 +116,24 @@ Top-level keys:
 - `ConfigRegistry.java`
   Registry of live-tunable values exposed via LISTCFG / SET.
 
+- `TelemetryBus.java`
+  Small interface used by OpModes and subsystems to publish telemetry.
+
+- `SchemaTelemetryBus.java`
+  Concrete `TelemetryBus` that wraps `SchemaTelemetryService` and disables on error.
+
+- `NoopTelemetryBus.java`
+  No-op bus for disabling telemetry publishing without changing call sites.
+
+- `TelemetryPublisher.java`
+  Interface for subsystems that emit telemetry each loop.
+
+- `TelemetryConfigurable.java`
+  Interface for subsystems that register live-config tunables.
+
+- `LiveConfigRegistry.java`
+  Interface passed to subsystems for registering tunables.
+
 - `LimelightTunnel.java`
   Simple TCP relay for forwarding Limelight ports.
 
@@ -130,6 +149,59 @@ Top-level keys:
 ---
 
 ## Typical OpMode usage
+
+New "bus" pattern (recommended):
+
+```java
+private static final String TELEMETRY_SCHEMA_PATH = "configs/telemetry_schema.json";
+private TelemetryBus telemetryBus;
+
+@Override
+public void init() {
+    telemetryBus = new SchemaTelemetryBus(hardwareMap, TELEMETRY_SCHEMA_PATH);
+    // To disable telemetry publishing, swap to:
+    // telemetryBus = new NoopTelemetryBus();
+
+    // Register live-config tunables for subsystems.
+    for (RobotUtility utility : botUtilities) {
+        if (utility instanceof TelemetryConfigurable) {
+            ((TelemetryConfigurable) utility).registerTunables(telemetryBus.config());
+        }
+    }
+}
+
+@Override
+public void start() {
+    telemetryBus.start();
+}
+
+@Override
+public void loop() {
+    telemetryBus.begin();
+
+    // Publish subsystem telemetry.
+    for (RobotUtility utility : botUtilities) {
+        if (utility instanceof TelemetryPublisher) {
+            ((TelemetryPublisher) utility).publishTelemetry(telemetryBus);
+        }
+    }
+
+    // Publish global robot vitals.
+    telemetryBus.put("run_id", runId);
+    telemetryBus.put("robot_ts_ms", System.currentTimeMillis());
+    telemetryBus.put("battery_voltage", RobotVitals.getBatteryVoltage(hardwareMap.voltageSensor), "%.2f");
+    telemetryBus.put("hub_current_amps", RobotVitals.getHubCurrentAmps(allHubs), "%.2f");
+    telemetryBus.put("hub_input_volts", RobotVitals.getHubInputVolts(allHubs), "%.2f");
+    telemetryBus.publish();
+}
+
+@Override
+public void stop() {
+    telemetryBus.close();
+}
+```
+
+Legacy direct-service pattern:
 
 ```
 SchemaTelemetryService telemetryService =
