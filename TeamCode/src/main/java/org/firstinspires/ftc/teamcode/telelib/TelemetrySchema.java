@@ -24,12 +24,14 @@ import org.json.JSONObject;
 public class TelemetrySchema {
     private final int port;
     private final boolean strict;
+    private final int maxRateHz;
     private final List<SchemaField> fields;
     private final Map<String, Integer> indexByName;
 
-    private TelemetrySchema(int port, boolean strict, List<SchemaField> fields) {
+    private TelemetrySchema(int port, boolean strict, int maxRateHz, List<SchemaField> fields) {
         this.port = port;
         this.strict = strict;
+        this.maxRateHz = maxRateHz;
         this.fields = fields;
         this.indexByName = new HashMap<>();
         for (int i = 0; i < fields.size(); i++) {
@@ -45,6 +47,10 @@ public class TelemetrySchema {
         JSONObject json = loadConfig(hardwareMap, pathOrJson);
         int port = json.optInt("port", 5599);
         boolean strict = json.optBoolean("strict", false);
+        int maxRateHz = json.optInt("max_rate_hz", 100);
+        if (maxRateHz <= 0) {
+            maxRateHz = 100;
+        }
         JSONArray fieldArray = json.optJSONArray("fields");
         if (fieldArray == null) {
             throw new IllegalArgumentException("Telemetry schema must include a fields array.");
@@ -62,7 +68,7 @@ public class TelemetrySchema {
                             field.optString("type", "double"),
                             field.optString("unit", "")));
         }
-        return new TelemetrySchema(port, strict, fields);
+        return new TelemetrySchema(port, strict, maxRateHz, fields);
     }
 
     /**
@@ -79,6 +85,13 @@ public class TelemetrySchema {
     public boolean isStrict() {
         // Strict mode means: crash if you try to publish a field not in the schema.
         return strict;
+    }
+
+    /**
+     * Maximum telemetry send rate per client (Hz).
+     */
+    public int getMaxRateHz() {
+        return maxRateHz;
     }
 
     /**

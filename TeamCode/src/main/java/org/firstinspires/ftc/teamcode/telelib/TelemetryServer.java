@@ -32,6 +32,7 @@ public class TelemetryServer implements AutoCloseable {
     private final int port;
     private final FieldCatalog catalog;
     private final ConfigRegistry configRegistry;
+    private final int minIntervalMs;
     private final CopyOnWriteArrayList<ClientSession> sessions = new CopyOnWriteArrayList<>();
     private volatile boolean running;
     private volatile TelemetrySnapshot latestSnapshot;
@@ -49,10 +50,19 @@ public class TelemetryServer implements AutoCloseable {
      * Create a server that can list and update live-config values.
      */
     public TelemetryServer(int port, FieldCatalog catalog, ConfigRegistry configRegistry) {
+        this(port, catalog, configRegistry, 100);
+    }
+
+    /**
+     * Create a server that can list and update live-config values with a max client rate.
+     */
+    public TelemetryServer(
+            int port, FieldCatalog catalog, ConfigRegistry configRegistry, int maxRateHz) {
         // Save the port and the list of fields the client can request.
         this.port = port;
         this.catalog = catalog;
         this.configRegistry = configRegistry;
+        this.minIntervalMs = Math.max(1, 1000 / Math.max(1, maxRateHz));
         this.latestSnapshot = TelemetrySnapshot.empty(catalog.size());
     }
 
@@ -311,7 +321,7 @@ public class TelemetryServer implements AutoCloseable {
             if (rate <= 0) {
                 rate = 20;
             }
-            intervalMs = Math.max(10, 1000 / rate);
+            intervalMs = Math.max(minIntervalMs, 1000 / rate);
 
             if (fieldList.equalsIgnoreCase("ALL") || fieldList.equals("*")) {
                 // "ALL" means every field in the catalog.

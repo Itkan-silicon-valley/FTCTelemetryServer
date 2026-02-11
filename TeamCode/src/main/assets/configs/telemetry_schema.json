@@ -1,6 +1,7 @@
 {
   "port": 5599,
   "strict": true,
+  "max_rate_hz": 100,
   "graphs": [
     {
       "id": "drive",

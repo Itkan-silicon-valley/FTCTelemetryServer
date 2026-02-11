@@ -74,6 +74,7 @@ Top-level keys:
 
 - `port` (number): TCP port for telemetry server.
 - `strict` (boolean): reject unknown field names when true.
+- `max_rate_hz` (number): maximum per-client telemetry send rate (Hz).
 - `graphs` (array): dashboard graph definitions.
 - `subscribe` (array, optional): field names the dashboard should request.
   If omitted, the dashboard subscribes to all fields.
@@ -198,6 +199,52 @@ public void loop() {
 @Override
 public void stop() {
     telemetryBus.close();
+}
+```
+
+Wrapper pattern (drop-in for existing telemetry.addData/update):
+
+```java
+private static final String TELEMETRY_SCHEMA_PATH = "configs/telemetry_schema.json";
+private TelemetryBus telemetryBus;
+
+@Override
+public void runOpMode() {
+    telemetryBus = new SchemaTelemetryBus(hardwareMap, TELEMETRY_SCHEMA_PATH);
+    telemetry = new TelelibTelemetry(telemetry, telemetryBus);
+
+    waitForStart();
+    while (opModeIsActive()) {
+        telemetry.addData("robot_ts_ms", System.currentTimeMillis());
+        telemetry.update();
+    }
+}
+```
+
+Note: the dashboard UI relies on the schema JSON (fields/graphs/subscribe). If you don't provide
+`telemetry_schema.json`, the web UI won't know what to display.
+Note: the wrapper will use numeric `put(...)` calls when it can detect numeric values, otherwise it
+falls back to string values.
+
+Live-config with the wrapper:
+
+```java
+private static final String TELEMETRY_SCHEMA_PATH = "configs/telemetry_schema.json";
+private TelemetryBus telemetryBus;
+private volatile double shooterKp = 0.015;
+
+@Override
+public void runOpMode() {
+    telemetryBus = new SchemaTelemetryBus(hardwareMap, TELEMETRY_SCHEMA_PATH);
+    // Register tunables before wrapping telemetry.
+    telemetryBus.config().registerDouble("shooter_kp", () -> shooterKp, v -> shooterKp = v, 0.0, 1.0);
+    telemetry = new TelelibTelemetry(telemetry, telemetryBus);
+
+    waitForStart();
+    while (opModeIsActive()) {
+        telemetry.addData("shooter_kp", "%.4f", shooterKp);
+        telemetry.update();
+    }
 }
 ```
 

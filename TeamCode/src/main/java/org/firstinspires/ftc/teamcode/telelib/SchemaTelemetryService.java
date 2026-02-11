@@ -38,7 +38,9 @@ public class SchemaTelemetryService implements AutoCloseable {
         }
         this.configRegistry = configRegistry;
         // Start the TCP server that the laptop will connect to.
-        this.server = new TelemetryServer(schema.getPort(), catalog, configRegistry);
+        this.server =
+                new TelemetryServer(
+                        schema.getPort(), catalog, configRegistry, schema.getMaxRateHz());
     }
 
     /**
